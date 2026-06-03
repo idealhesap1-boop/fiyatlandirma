@@ -1,0 +1,10 @@
+{
+  "name": "component_product",
+  "version": "1.2",
+  "author": "CSE Senior Dev Team",
+  "link": "https://opencart.com",
+  "description": "Bileşen Bazlı Ürün Modülü (CSE) v1.2",
+  "files": [
+    "upload/"
+  ]
+}

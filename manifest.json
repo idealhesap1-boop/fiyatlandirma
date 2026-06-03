@@ -1,0 +1,54 @@
+{
+  "name": "component_product",
+  "version": "1.2",
+  "author": "CSE Senior Dev Team",
+  "link": "https://opencart.com",
+  "description": {
+    "en-gb": "Component Based Product Module (CSE) v1.2",
+    "tr-tr": "Bileşen Bazlı Ürün Modülü (CSE) v1.2"
+  },
+  "type": "module",
+  "require": {
+    "opencart": ">=4.0.0.0"
+  },
+  "extension": {
+    "admin": [
+      "admin/controller/extension/module/component_product.php",
+      "admin/model/extension/module/component_product.php",
+      "admin/language/en-gb/extension/module/component_product.php",
+      "admin/language/tr-tr/extension/module/component_product.php",
+      "admin/view/template/extension/module/component_product.twig"
+    ],
+    "catalog": [
+      "catalog/controller/extension/component_product/main.php",
+      "catalog/model/extension/component_product/main.php",
+      "catalog/language/en-gb/extension/component_product/main.php",
+      "catalog/language/tr-tr/extension/component_product/main.php",
+      "catalog/language/en-gb/extension/total/component_total.php",
+      "catalog/language/tr-tr/extension/total/component_total.php",
+      "catalog/model/extension/total/component_total.php",
+      "catalog/view/theme/default/template/extension/component_product/panel.twig"
+    ],
+    "system": [
+      "system/library/component_product/autoload.php",
+      "system/library/component_product/composer.json"
+    ]
+  },
+  "events": [
+    {
+      "code": "cse_ui_binding",
+      "trigger": "catalog/view/product/product/before",
+      "action": "extension/component_product/main|injectPanel"
+    },
+    {
+      "code": "cse_cart_intercept",
+      "trigger": "catalog/controller/checkout/cart/add/before",
+      "action": "extension/component_product/main|onCartAdd"
+    },
+    {
+      "code": "cse_order_snapshot",
+      "trigger": "catalog/model/checkout/order/addOrder/before",
+      "action": "extension/component_product/main|bindImmutableOrderData"
+    }
+  ]
+}

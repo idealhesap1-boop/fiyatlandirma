@@ -1,0 +1,128 @@
+<div id="cse-component-product-panel" class="cse-component-panel mb-4 card">
+  <div class="card-header bg-primary text-white">
+    <h5 class="mb-0">
+      <i class="fa-solid fa-cubes"></i> Özel Bileşenler
+    </h5>
+  </div>
+  <div class="card-body">
+    {% if component_options is not empty %}
+      <form id="component-form" method="post" action="" class="component-selection-form">
+        <input type="hidden" name="component_data" id="component_data_input" value="{}">
+        
+        {% for option in component_options %}
+          <div class="mb-3 component-option-group">
+            <label class="form-label fw-bold">
+              {{ option.option_name }}
+              {% if option.required %}<span class="text-danger">*</span>{% endif %}
+            </label>
+            
+            <div class="component-items">
+              <div class="input-group">
+                <span class="input-group-text">
+                  <i class="fa-solid fa-box"></i> {{ option.name }}
+                </span>
+                <input type="number" 
+                       class="form-control component-qty" 
+                       name="comp_qty_{{ option.option_value_id }}"
+                       data-option-value-id="{{ option.option_value_id }}"
+                       data-option-name="{{ option.name }}"
+                       data-option-note="{{ option.note_text }}"
+                       min="0" 
+                       value="0"
+                       placeholder="Miktar">
+              </div>
+              {% if option.note_text %}
+                <small class="text-muted d-block mt-1">
+                  <i class="fa-solid fa-info-circle"></i> {{ option.note_text }}
+                </small>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+        
+        <button type="button" id="component-submit-btn" class="btn btn-primary w-100 mt-3">
+          <i class="fa-solid fa-check-circle"></i> Seçim Yap
+        </button>
+      </form>
+      
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const compForm = document.getElementById('component-form');
+          const compDataInput = document.getElementById('component_data_input');
+          const submitBtn = document.getElementById('component-submit-btn');
+          
+          if (submitBtn) {
+            submitBtn.addEventListener('click', function() {
+              const componentData = {};
+              document.querySelectorAll('.component-qty').forEach(input => {
+                const qty = parseInt(input.value) || 0;
+                if (qty > 0) {
+                  componentData[input.dataset.optionValueId] = {
+                    qty: qty,
+                    note: input.dataset.optionNote,
+                    name: input.dataset.optionName
+                  };
+                }
+              });
+              
+              compDataInput.value = JSON.stringify(componentData);
+              
+              // Trigger add to cart with component data
+              const mainForm = document.querySelector('form[action*="checkout/cart/add"]') || 
+                              document.querySelector('form.product-form') ||
+                              document.getElementById('product');
+              
+              if (mainForm) {
+                // Append component data to main form before submit
+                mainForm.appendChild(compDataInput);
+              }
+              
+              console.log('Component data set:', componentData);
+            });
+          }
+        });
+      </script>
+    {% else %}
+      <div class="alert alert-info">
+        <i class="fa-solid fa-info-circle"></i> Bu ürüne özel bileşen seçeneği yoktur.
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .cse-component-panel {
+    border-left: 4px solid #007bff;
+  }
+  
+  .component-option-group {
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 4px;
+  }
+  
+  .component-qty {
+    text-align: center;
+    font-weight: bold;
+  }
+  
+  .component-qty::-webkit-outer-spin-button,
+  .component-qty::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  .component-qty[type=number] {
+    -moz-appearance: textfield;
+  }
+  
+  #component-submit-btn {
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+  
+  #component-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+</style>

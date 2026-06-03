@@ -1,0 +1,15 @@
+{
+    "name": "cse/component-product",
+    "version": "1.2",
+    "description": "Component Based Product Module for OpenCart 4",
+    "type": "opencart-extension",
+    "authors": [
+        {
+            "name": "CSE Senior Dev Team",
+            "email": "support@example.com"
+        }
+    ],
+    "require": {
+        "opencart/opencart": ">=4.0.0.0"
+    }
+}
